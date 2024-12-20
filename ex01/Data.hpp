@@ -2,7 +2,7 @@
 
 struct Data
 {
-	int		width;
-	char	*str;
-	float	money;
+	int			width;
+	const char	*str;
+	float		money;
 };

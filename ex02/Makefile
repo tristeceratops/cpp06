@@ -1,6 +1,6 @@
 NAME := Base
 FLAGS := -Wall -Wextra -Werror -std=c++98 -g
-FILES := main.cpp Base.cpp A.cpp B.cpp C.cpp
+FILES := main.cpp generate.cpp identify.cpp Base.cpp
 OBJ := $(FILES:.cpp=.o)
 
 all: $(NAME)
