@@ -85,7 +85,12 @@ void ScalarConverter::convert(const std::string &input) {
 	std::cout << "char: ";
 	if (charPossible) {
 		std::cout << "'" << charValue << "'" << std::endl;
-	} else {
+	} 
+	else if (intPossible && intValue >= 0 && intValue <= 127 && !std::isprint(intValue)) {
+		std::cout << "Non displayable" << std::endl;
+
+	}
+	else {
 		std::cout << "impossible" << std::endl;
 	}
 
