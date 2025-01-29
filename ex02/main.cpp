@@ -8,10 +8,9 @@ int main(void)
 	Base *baseA;
 	Base *baseB;
 	Base *baseC;
-	Base *rand;
+	Base *random;
 
 	srand(time(0));
-
 	baseA = new A();
 	baseB = new B();
 	baseC = new C();
@@ -28,9 +27,10 @@ int main(void)
 
 	for (int i = 0; i < 50; i++)
 	{
-		rand = generate();
-		identify(rand);
-		delete rand;
+		srand(rand());
+		random = generate();
+		identify(random);
+		delete random;
 	}
 	
 	delete baseA;

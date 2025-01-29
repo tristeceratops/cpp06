@@ -3,6 +3,7 @@
 #include "B.hpp"
 #include "C.hpp"
 #include <iostream>
+#include <exception>
 
 void identify(Base *p)
 {
@@ -25,7 +26,7 @@ void identify(Base &p)
         std::cout << "A" << std::endl;
         return;
     }
-    catch (const std::bad_cast& e) {}
+    catch (std::exception &e) {}
 
     try
     {
@@ -34,7 +35,7 @@ void identify(Base &p)
         std::cout << "B" << std::endl;
         return;
     }
-    catch (const std::bad_cast& e) {}
+    catch (std::exception &e) {}
 
     try
     {
@@ -43,7 +44,7 @@ void identify(Base &p)
         std::cout << "C" << std::endl;
         return;
     }
-    catch (const std::bad_cast& e) {}
+    catch (std::exception &e) {}
 
     std::cout << "Unknown type" << std::endl;
 }
