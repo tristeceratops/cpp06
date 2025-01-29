@@ -17,33 +17,33 @@ void identify(Base *p)
 }
 
 void identify(Base &p)
-{	
-	try
-	{
-		if (dynamic_cast<A*>(&p))
-			std::cout << "A" << std::endl;
-	}
-	catch(const std::bad_cast& e)
-	{
-		std::cerr << e.what() << '\n';
-	}
-	try
-	{
-		if (dynamic_cast<B*>(&p))
-			std::cout << "B" << std::endl;
-	}
-	catch(const std::bad_cast& e)
-	{
-		std::cerr << e.what() << '\n';
-	}
-	try
-	{
-		if (dynamic_cast<C*>(&p))
-			std::cout << "C" << std::endl;
-	}
-	catch(const std::bad_cast& e)
-	{
-		std::cerr << "Bad cast: " << e.what() << '\n';
-	}
-	
+{
+    try
+    {
+        A &a = dynamic_cast<A&>(p);
+		(void)a;
+        std::cout << "A" << std::endl;
+        return;
+    }
+    catch (const std::bad_cast& e) {}
+
+    try
+    {
+        B &b = dynamic_cast<B&>(p);
+		(void)b;
+        std::cout << "B" << std::endl;
+        return;
+    }
+    catch (const std::bad_cast& e) {}
+
+    try
+    {
+        C &c = dynamic_cast<C&>(p);
+		(void)c;
+        std::cout << "C" << std::endl;
+        return;
+    }
+    catch (const std::bad_cast& e) {}
+
+    std::cout << "Unknown type" << std::endl;
 }
