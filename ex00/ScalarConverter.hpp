@@ -11,6 +11,14 @@
 class ScalarConverter
 {
 	private:
+		typedef enum eType
+		{
+			NONE,
+			CHAR,
+			INT,
+			FLOAT,
+			DOUBLE
+		} eType;
 		ScalarConverter();
 		ScalarConverter(const ScalarConverter &other);
 		~ScalarConverter();
