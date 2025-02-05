@@ -1,8 +1,6 @@
 #include "ScalarConverter.hpp"
 
-ScalarConverter::ScalarConverter()
-{
-}
+ScalarConverter::ScalarConverter(){}
 
 ScalarConverter::ScalarConverter(const ScalarConverter &other)
 {
@@ -76,14 +74,14 @@ bool isDouble(const std::string &input)
 void ScalarConverter::convert(const std::string &input)
 {
 	eType type = NONE;
-	int charPossible = true;
-	bool intPossible = true;
-	bool floatPossible = true;
-	bool doublePossible = true;
-	char valueChar;
-	int valueInt;
-	float valueFloat;
-	double valueDouble;
+	std::pair<bool, char> valueChar;
+	std::pair<bool, int> valueInt;
+	std::pair<bool, float> valueFloat;
+	std::pair<bool, double> valueDouble;
+	valueChar.first = true;
+	valueInt.first = true;
+	valueFloat.first = true;
+	valueDouble.first = true;
 	size_t size = input.size();
 
 	if(size == 1)
@@ -108,27 +106,27 @@ void ScalarConverter::convert(const std::string &input)
 	}
 	if (type == CHAR)
 	{
-		valueChar = input.at(0);
-		valueInt = static_cast<int>(valueChar);
-		valueFloat = static_cast<float>(valueChar);
-		valueDouble = static_cast<double>(valueChar);
+		valueChar.second = input.at(0);
+		valueInt.second = static_cast<int>(valueChar.second);
+		valueFloat.second = static_cast<float>(valueChar.second);
+		valueDouble.second = static_cast<double>(valueChar.second);
 	}
 	if (type == INT)
 	{
 		std::stringstream ss(input);
-		if (!(ss >> valueInt))
+		if (!(ss >> valueInt.second))
 		{
 			type = DOUBLE;
-			intPossible = false;
+			valueInt.first = false;
 		}
 		else
 		{
-			if (valueInt < 0 || valueInt > std::numeric_limits<char>::max())
-				charPossible = false;
+			if (valueInt.second < 0 || valueInt.second > std::numeric_limits<char>::max())
+				valueChar.first = false;
 			else
-				valueChar = static_cast<char>(valueInt);
-			valueFloat = static_cast<float>(valueInt);
-			valueDouble = static_cast<double>(valueInt);
+				valueChar.second = static_cast<char>(valueInt.second);
+			valueFloat.second = static_cast<float>(valueInt.second);
+			valueDouble.second = static_cast<double>(valueInt.second);
 		}
 	}
 	if (type == FLOAT)
@@ -138,29 +136,27 @@ void ScalarConverter::convert(const std::string &input)
 		{
 			isInf = true;
 			if (input == "+inff")
-				valueFloat = std::numeric_limits<float>::infinity();
+				valueFloat.second = std::numeric_limits<float>::infinity();
 			else if (input == "-inff")
-				valueFloat = -std::numeric_limits<float>::infinity();
+				valueFloat.second = -std::numeric_limits<float>::infinity();
 			else
-				valueFloat = std::numeric_limits<float>::quiet_NaN();
+				valueFloat.second = std::numeric_limits<float>::quiet_NaN();
 		}
 		else
 		{
 			std::stringstream ss(input);
-			if (!(ss >> valueFloat))
-			{
-				floatPossible = false;
-			}
+			if (!(ss >> valueFloat.second))
+				valueFloat.first = false;
 		}
-		if (isInf || (valueFloat < 0 && valueFloat > std::numeric_limits<char>::max()))
-			charPossible = false;
+		if (isInf || (valueFloat.second < 0 && valueFloat.second > std::numeric_limits<char>::max()))
+			valueChar.first = false;
 		else
-			valueChar = static_cast<char>(valueFloat);
-		if (isInf || valueFloat < std::numeric_limits<int>::min() || valueFloat > std::numeric_limits<int>::max())
-			intPossible = false;
+			valueChar.second = static_cast<char>(valueFloat.second);
+		if (isInf || valueFloat.second < std::numeric_limits<int>::min() || valueFloat.second > std::numeric_limits<int>::max())
+			valueChar.first = false;
 		else
-			valueInt = static_cast<int>(valueFloat);
-		valueDouble = static_cast<double>(valueFloat);
+			valueInt.second = static_cast<int>(valueFloat.second);
+		valueDouble.second = static_cast<double>(valueFloat.second);
 	}
 	if (type == DOUBLE)
 	{
@@ -169,51 +165,49 @@ void ScalarConverter::convert(const std::string &input)
 		{
 			isInf = true;
 			if (input == "+inf")
-				valueDouble = std::numeric_limits<double>::infinity();
+				valueDouble.second = std::numeric_limits<double>::infinity();
 			else if (input == "-inf")
-				valueDouble = -std::numeric_limits<double>::infinity();
+				valueDouble.second = -std::numeric_limits<double>::infinity();
 			else
-				valueDouble = std::numeric_limits<double>::quiet_NaN();
+				valueDouble.second = std::numeric_limits<double>::quiet_NaN();
 		}
 		else
 		{
 			std::stringstream ss(input);
-			if (!(ss >> valueDouble))
-			{
-				doublePossible = false;
-			}
+			if (!(ss >> valueDouble.second))
+				valueDouble.first = false;
 		}
-		if (isInf || (valueDouble < 0 && valueDouble > std::numeric_limits<char>::max()))
-			charPossible = false;
+		if (isInf || (valueDouble.second < 0 && valueDouble.second > std::numeric_limits<char>::max()))
+			valueChar.first = false;
 		else
-			valueChar = static_cast<char>(valueDouble);
-		if (isInf || (valueDouble < std::numeric_limits<int>::min() || valueDouble > std::numeric_limits<int>::max()))
-			intPossible = false;
+			valueChar.second = static_cast<char>(valueDouble.second);
+		if (isInf || (valueDouble.second < std::numeric_limits<int>::min() || valueDouble.second > std::numeric_limits<int>::max()))
+			valueInt.first = false;
 		else
-			valueInt = static_cast<int>(valueDouble);
-		if ((valueDouble < std::numeric_limits<float>::min() || valueDouble > std::numeric_limits<float>::max()) && !isInf)
-			floatPossible = false;
+			valueInt.second = static_cast<int>(valueDouble.second);
+		if ((valueDouble.second < std::numeric_limits<float>::min() || valueDouble.second > std::numeric_limits<float>::max()) && !isInf)
+			valueFloat.first = false;
 		else
-			valueFloat = static_cast<float>(valueDouble);
+			valueFloat.second = static_cast<float>(valueDouble.second);
 	}
 
 	std::cout << "char: ";
-	if (charPossible && isprint(valueChar))
-		std::cout << "'" << valueChar << "'" << std::endl;
-	else if (charPossible)
+	if (valueChar.first && isprint(valueChar.second))
+		std::cout << "'" << valueChar.second << "'" << std::endl;
+	else if (valueChar.first)
 		std::cout << "Non displayable" << std::endl;
 	else
 		std::cout << "impossible" << std::endl;
-	if (intPossible)
-		std::cout << "int: " << valueInt << std::endl;
+	if (valueInt.first)
+		std::cout << "int: " << valueInt.second << std::endl;
 	else
 		std::cout << "int: impossible" << std::endl;
-	if (floatPossible)
-		std::cout << "float: " << std::fixed << std::setprecision(1) << valueFloat << "f" << std::endl;
+	if (valueFloat.first)
+		std::cout << "float: " << std::fixed << std::setprecision(1) << valueFloat.second << "f" << std::endl;
 	else
 		std::cout << "float: impossible" << std::endl;
-	if (doublePossible)
-		std::cout << "double: " << std::fixed << std::setprecision(1) << valueDouble << std::endl;
+	if (valueFloat.first)
+		std::cout << "double: " << std::fixed << std::setprecision(1) << valueDouble.second << std::endl;
 	else
 		std::cout << "double: impossible" << std::endl;
 }
